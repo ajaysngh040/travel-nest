@@ -21,7 +21,7 @@ export default function PlacePage() {
 
   return (
     <div className="mt-4 bg-white -mx-8 px-8 pt-8">
-      <h1 className="text-xl font-medium">
+      <h1 className="text-lg font-medium">
         {place.title}, {place.address}
       </h1>
       <AddressLink>{place.address}</AddressLink>

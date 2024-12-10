@@ -63,7 +63,7 @@ export default function LogIn() {
   }
 
   return (
-    <div className="mt-4 grow flex items-center justify-around">
+    <div className="mt-12 grow flex items-center justify-around">
       <div className="mb-32">
         <h1 className="text-lg font-medium text-center mb-4">Login</h1>
         <form onSubmit={handleLoginSubmit} className="max-w-md mx-auto">
@@ -91,7 +91,7 @@ export default function LogIn() {
           <div className="text-center text-sm font-light py-2">
             Don&apos;t have an account yet?{" "}
             <Link
-              to={"/signup"}
+              to={"/register"}
               className="text-sm font-light underline text hover:font-medium"
             >
               Register now

@@ -27,7 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<IndexLayout />}>
             <Route index element={<IndexPage />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/register" element={<SignUp />} />
             <Route path="/login" element={<LogIn />} />
             <Route path="/account" element={<ProfilePage />} />
             <Route path="/account/places" element={<PlacesPage />} />

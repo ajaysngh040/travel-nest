@@ -38,7 +38,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="mt-4 grow flex items-center justify-around">
+    <div className="mt-12 grow flex items-center justify-around">
       <div className="mb-32">
         <h1 className="text-lg font-medium text-center mb-4">Register</h1>
         <form onSubmit={registerUser} className="max-w-md mx-auto">

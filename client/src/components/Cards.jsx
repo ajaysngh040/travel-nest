@@ -14,30 +14,36 @@ export default function IndexPage() {
   }, []);
 
   return (
-    <div className="mt-36 sm:mt-24 mb-4 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 space-x-6">
+    <div className="mt-36 sm:mt-24 mb-4 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {places.length > 0
         ? places.map((place) => (
             <Link
               to={`/place/${place._id}`}
               key={place._id}
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-2 bg-white p-4 rounded-xl shadow-lg"
             >
               {/* Image container */}
-              <div className="relative w-full h-[50vw] sm:h-48 md:h-56 lg:h-64 rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative w-full h-64 rounded-xl overflow-hidden bg-gray-100">
                 {place.photos?.[0] ? (
                   <ImageWithSkeleton
                     src={place.photos[0]}
                     alt={place.title || "Place image"}
                   />
                 ) : (
-                  <Skeleton.Image style={{ height: "100%", width: "100%" }} />
+                  <Skeleton.Image
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
                 )}
               </div>
 
               {/* Title and address */}
               <div className="flex justify-between mt-2">
                 {!place.title || !place.address ? (
-                  <Skeleton.Input style={{ width: 200 }} active />
+                  <Skeleton.Input style={{ width: 200 }} active size="small" />
                 ) : (
                   <p className="text-sm font-medium">
                     {place.title}, {place.address}
@@ -64,12 +70,13 @@ export default function IndexPage() {
 
               {/* Price, distance, and date */}
               {!place.price ? (
-                <Skeleton.Input style={{ width: 100 }} active />
+                <Skeleton.Input style={{ width: 100 }} active size="small" />
               ) : (
                 <div className="mt-1">
-                  <p className="gray-text">63 kilometers away</p>
-                  <p className="gray-text">22-27 Jul</p>
-                  <span className="font-base">${place.price}</span> per night
+                  <p className="text-gray-500">63 kilometers away</p>
+                  <p className="text-gray-500">22-27 Jul</p>
+                  <span className="font-semibold">${place.price}</span> per
+                  night
                 </div>
               )}
             </Link>
@@ -77,10 +84,15 @@ export default function IndexPage() {
         : Array(4) // Skeleton loaders for placeholders
             .fill(0)
             .map((_, index) => (
-              <div key={index} className="flex flex-col gap-2">
-                <Skeleton.Image style={{ height: 200, width: "100%" }} />
-                <Skeleton.Input style={{ width: 200 }} active />
-                <Skeleton.Input style={{ width: 100 }} active />
+              <div
+                key={index}
+                className="flex flex-col gap-2 bg-white p-4 rounded-xl shadow-lg"
+              >
+                <Skeleton.Image
+                  style={{ height: 200, width: "100%", objectFit: "cover" }}
+                />
+                <Skeleton.Input style={{ width: 200 }} active size="small" />
+                <Skeleton.Input style={{ width: 100 }} active size="small" />
               </div>
             ))}
     </div>

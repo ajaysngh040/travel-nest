@@ -42,7 +42,7 @@ export default function PlacesPage() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative pt-12">
       <AccountNav />
 
       <div className="text-center">
@@ -75,18 +75,22 @@ export default function PlacesPage() {
                 key={index}
                 className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl mb-4"
               >
-                <Skeleton.Image className="w-32 h-32" />
+                <Skeleton.Image className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48" />
                 <div className="flex-1">
-                  <Skeleton.Input active style={{ width: "80%" }} />
+                  <Skeleton.Input
+                    active
+                    style={{ width: "80%" }}
+                    className="sm:w-3/4 md:w-2/3 lg:w-1/2"
+                  />
                   <Skeleton.Input
                     active
                     style={{ width: "60%" }}
-                    className="mt-2"
+                    className="sm:w-2/3 md:w-1/2 lg:w-1/3 mt-2"
                   />
                   <Skeleton.Input
                     active
                     style={{ width: "40%" }}
-                    className="mt-2"
+                    className="sm:w-1/2 md:w-1/3 lg:w-1/4 mt-2"
                   />
                 </div>
               </div>

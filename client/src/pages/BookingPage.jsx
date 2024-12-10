@@ -7,11 +7,13 @@ import BookingDates from "../components/BookingDates";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
+
   useEffect(() => {
     axios.get("/bookings").then((response) => {
       setBookings(response.data);
     });
   }, []);
+
   return (
     <div>
       <AccountNav />
@@ -26,7 +28,7 @@ export default function BookingsPage() {
               <div className="w-48">
                 <PlaceImg place={booking.place} />
               </div>
-              <div className=" py-3 pr-3 grow">
+              <div className="py-3 pr-3 grow">
                 <h2 className="text-md font-medium">{booking.place.title}</h2>
                 <div className="text-sm font-light">
                   <BookingDates
