@@ -19,8 +19,8 @@ connectDB();
 // ];
 const allowedOrigins =
   process.env.NODE_ENV === "production"
-    ? [process.env.CLIENT_URL] // Production client URL
-    : [process.env.DEV_URL]; // Development client URL
+    ? process.env.CLIENT_URL // Production client URL
+    : process.env.DEV_URL; // Development client URL
 
 app.use(
   cors({
