@@ -9,7 +9,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className="relative mt-8">
+      <div className="relative mt-12">
         <AccountNav />
         <Profile />
 

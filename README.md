@@ -1,6 +1,6 @@
 ﻿# travel nest
 
-One of my most significant achievements is the development of an airbnb clone. Designed an intuitive and visually appealing interface, making it effortless for users to navigate and explore various accommodation options. Developed a fully responsive website, allowing users to access the platform across various devices and screen sizes.
+One of my most significant achievements is the development of Travel Nest. Designed an intuitive and visually appealing interface, making it effortless for users to navigate and explore various accommodation options. Developed a fully responsive website, allowing users to access the platform across various devices and screen sizes.
 
 Overview
 This project is a booking application where users can register, log in, and manage their places and bookings. The application supports features like uploading images, creating and editing places, and making bookings.
