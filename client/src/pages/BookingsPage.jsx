@@ -4,19 +4,51 @@ import axios from "axios";
 import PlaceImg from "../components/PlaceImg";
 import { Link } from "react-router-dom";
 import BookingDates from "../components/BookingDates";
+import { Skeleton } from "antd"; // Import Skeleton from Ant Design
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     axios.get("/bookings").then((response) => {
       setBookings(response.data);
+      setLoading(false); // Set loading to false after data is fetched
     });
   }, []);
+
   return (
     <div>
       <AccountNav />
-      <div className="">
-        {bookings?.length > 0 &&
+      <div className="container mx-auto p-4">
+        {loading ? (
+          // Skeleton Loader for Mobile and Desktop
+          Array(4)
+            .fill(0)
+            .map((_, index) => (
+              <div
+                key={index}
+                className="flex gap-4 bg-gray-100 rounded-2xl overflow-hidden mb-4"
+              >
+                <div className="w-48">
+                  <Skeleton.Image className="w-full h-32" />
+                </div>
+                <div className="py-3 pr-3 grow">
+                  <Skeleton.Input active style={{ width: "80%" }} />
+                  <Skeleton.Input
+                    active
+                    style={{ width: "60%" }}
+                    className="mt-2"
+                  />
+                  <Skeleton.Input
+                    active
+                    style={{ width: "50%" }}
+                    className="mt-2"
+                  />
+                </div>
+              </div>
+            ))
+        ) : bookings?.length > 0 ? (
           bookings.map((booking) => (
             <Link
               key={booking._id}
@@ -26,7 +58,7 @@ export default function BookingsPage() {
               <div className="w-48">
                 <PlaceImg place={booking.place} />
               </div>
-              <div className=" py-3 pr-3 grow">
+              <div className="py-3 pr-3 grow">
                 <h2 className="text-md font-medium">{booking.place.title}</h2>
                 <div className="text-sm font-light">
                   <BookingDates
@@ -55,7 +87,10 @@ export default function BookingsPage() {
                 </div>
               </div>
             </Link>
-          ))}
+          ))
+        ) : (
+          <p>No bookings available.</p>
+        )}
       </div>
     </div>
   );
