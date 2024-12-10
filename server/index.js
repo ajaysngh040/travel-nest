@@ -13,13 +13,27 @@ const cors = require("cors"); // Import the CORS middleware
 const app = express();
 connectDB();
 
-// Set up CORS
+const allowedOrigins = [
+  process.env.CLIENT_URL, // Production frontend URL
+  process.env.DEV_URL, // Development frontend URL
+];
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // You can specify allowed domains here or use '*' for all domains
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g., mobile apps or Postman)
+      if (!origin) return callback(null, true);
+
+      // Check if the origin is in the allowedOrigins list
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // If not allowed, return an error
+      return callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    credentials: true, // Allow credentials
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-    credentials: true,
   })
 );
 

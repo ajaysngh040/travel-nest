@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
@@ -88,6 +88,15 @@ export default function LogIn() {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+          <div className="text-center text-sm font-light py-2">
+            Don&apos;t have an account yet?{" "}
+            <Link
+              to={"/signup"}
+              className="text-sm font-light underline text hover:font-medium"
+            >
+              Register now
+            </Link>
+          </div>
         </form>
         <ToastContainer position="bottom-right" />
       </div>
