@@ -13,18 +13,9 @@ const cors = require("cors"); // Import the CORS middleware
 const app = express();
 connectDB();
 
-// const allowedOrigins = [
-//   process.env.CLIENT_URL, // Production frontend URL
-//   process.env.DEV_URL, // Development frontend URL
-// ];
-const allowedOrigins =
-  process.env.NODE_ENV === "production"
-    ? process.env.CLIENT_URL // Production client URL
-    : process.env.DEV_URL; // Development client URL
-
 app.use(
   cors({
-    origin: allowedOrigins, // You can specify allowed domains here or use '*' for all domains
+    origin: process.env.CLIENT_URL, // You can specify allowed domains here or use '*' for all domains
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true,
