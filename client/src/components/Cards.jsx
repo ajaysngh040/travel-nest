@@ -119,6 +119,16 @@ function ImageWithSkeleton({ src, alt }) {
         loading="lazy"
         onLoad={handleImageLoaded}
         onError={() => setLoading(false)}
+        srcSet={`
+          ${src}?w=480 480w,
+          ${src}?w=768 768w,
+          ${src}?w=1024 1024w,
+          ${src}?w=1440 1440w
+        `}
+        sizes="(max-width: 480px) 100vw, 
+               (max-width: 768px) 50vw, 
+               (max-width: 1024px) 33vw, 
+               25vw"
       />
     </div>
   );
