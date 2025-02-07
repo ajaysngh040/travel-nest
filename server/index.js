@@ -1,27 +1,48 @@
-require("dotenv").config();
+const dotenv = require("dotenv");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
+const cors = require("cors");
+const path = require("path");
+
+// Routes
 const authRoutes = require("./routes/authRoutes");
 const placeRoutes = require("./routes/placeRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+
 const errorHandler = require("./middleware/errorHandler");
-const path = require("path");
-const uploadRoutes = require("./routes/uploadRoutes"); // Adjust the path as needed
-const cors = require("cors"); // Import the CORS middleware
+
+// Load environment variables
+dotenv.config({
+  path:
+    process.env.NODE_ENV === "production" ? ".env.production" : ".env.local",
+});
+
+// Database Connection
+connectDB();
 
 const app = express();
-connectDB();
+
+// CORS Configuration
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? [process.env.CLIENT_URL]
+    : ["http://localhost:5173", process.env.CLIENT_URL];
 
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? process.env.CLIENT_URL
-        : process.env.DEV_URL, // You can specify allowed domains here or use '*' for all domains
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`Blocked by CORS: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Allow cookies/auth tokens
   })
 );
 
@@ -30,21 +51,19 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/auth", authRoutes); // auth routes
-app.use("/places", placeRoutes); // places routes
-app.use("/bookings", bookingRoutes); // booking routes
+app.use("/auth", authRoutes);
+app.use("/places", placeRoutes);
+app.use("/bookings", bookingRoutes);
+app.use("/uploads", uploadRoutes);
 
-// Serve files from the uploads folder
+// Serve static files (Uploaded images)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Use the upload routes
-app.use("/uploads", uploadRoutes); // Prefixing routes with /api for better
-
-// Error handling
+// Global Error Handling Middleware
 app.use(errorHandler);
 
-// Server listening
-const PORT = process.env.PORT;
+// Start Server
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

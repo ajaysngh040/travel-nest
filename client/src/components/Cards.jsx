@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import { Skeleton } from "antd";
 import Image from "../components/Image";
 
+const BASE_URL = import.meta.env.VITE_DEV_URL || import.meta.env.VITE_PROD_URL;
+
 export default function IndexPage() {
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
-    axios.get("/places").then((response) => {
+    axios.get("/places/").then((response) => {
       setPlaces(response.data);
     });
   }, []);
@@ -107,6 +109,21 @@ function ImageWithSkeleton({ src, alt }) {
     setLoading(false);
   };
 
+  // Ensure the src is correct before adding to srcSet
+  const getImageSrcSet = (src) => {
+    // eslint-disable-next-line react/prop-types
+    if (!src.startsWith("http") && !src.startsWith("/uploads/")) {
+      src = `${BASE_URL}/uploads/${src}`;
+    }
+
+    return `
+      ${src}?w=480 480w,
+      ${src}?w=768 768w,
+      ${src}?w=1024 1024w,
+      ${src}?w=1440 1440w
+    `;
+  };
+
   return (
     <div className="relative w-full h-full">
       {loading && <Skeleton.Image style={{ height: "100%", width: "100%" }} />}
@@ -119,12 +136,7 @@ function ImageWithSkeleton({ src, alt }) {
         loading="lazy"
         onLoad={handleImageLoaded}
         onError={() => setLoading(false)}
-        srcSet={`
-          ${src}?w=480 480w,
-          ${src}?w=768 768w,
-          ${src}?w=1024 1024w,
-          ${src}?w=1440 1440w
-        `}
+        srcSet={getImageSrcSet(src)}
         sizes="(max-width: 480px) 100vw, 
                (max-width: 768px) 50vw, 
                (max-width: 1024px) 33vw, 

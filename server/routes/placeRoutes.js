@@ -2,17 +2,19 @@ const express = require("express");
 const {
   createPlace,
   getPlaces,
-  updatePlace,
   getPlace,
-} = require("../controllers/placeController"); // Make sure these functions are correctly imported
+  updatePlace,
+  deletePlace,
+} = require("../controllers/placeController");
 const { verifyToken } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// Define routes with proper callbacks
+// Routes
 router.post("/create", verifyToken, createPlace);
 router.get("/", getPlaces);
 router.get("/:id?", getPlace);
-router.put("/update", verifyToken, updatePlace);
+router.put("/update/:id", verifyToken, updatePlace);
+router.delete("/update/:id", verifyToken, deletePlace);
 
 module.exports = router;

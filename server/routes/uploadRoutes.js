@@ -1,18 +1,14 @@
 const express = require("express");
+const multer = require("multer");
 const {
-  uploadByLink,
   uploadImage,
+  uploadByLink,
 } = require("../controllers/uploadController");
-const upload = require("../middleware/imageUploader"); // Importing multer configuration
 
-// Initialize the router
+const upload = multer({ dest: "uploads/" }); // Temporary local storage before Cloudinary upload
+
 const router = express.Router();
+router.post("/file", upload.single("image"), uploadImage);
+router.post("/url", uploadByLink);
 
-// Route for single file upload
-router.post("/uploadImage", upload.single("file"), uploadImage);
-
-// Route for uploading via link (assuming this doesn’t need multer)
-router.post("/uploadByLink", upload.single("file"), uploadByLink);
-
-// Export the router for use in other parts of the app
 module.exports = router;

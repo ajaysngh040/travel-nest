@@ -12,6 +12,9 @@ client/dist
 client/dist-ssr
 *.local
 
+client/.env.production
+client/.env.development
+
 server/node_modules
 server/dist
 server/dist-ssr
@@ -31,7 +34,8 @@ server/dist-ssr
 
 
 #for server
-server/.env
+server/.env.production
+server/.env.local
 
 
 

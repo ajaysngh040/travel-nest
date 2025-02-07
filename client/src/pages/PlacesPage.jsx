@@ -13,13 +13,13 @@ export default function PlacesPage() {
   useEffect(() => {
     const fetchUserPlaces = async () => {
       try {
-        const response = await axios.get("/places/", {
-          withCredentials: true, // Ensure credentials are included in requests
+        const response = await axios.get("/places", {
+          withCredentials: true,
         });
         setPlaces(response.data);
       } catch (err) {
         console.error("Error fetching user places:", err);
-        setError("Failed to fetch user places.");
+        setError(err.response?.data?.message || "Failed to fetch user places.");
       } finally {
         setLoading(false);
       }
@@ -30,14 +30,15 @@ export default function PlacesPage() {
 
   const handleDelete = async (placeId) => {
     try {
-      await axios.delete(`/places/update/${placeId}`, {
+      await axios.delete(`/places/${placeId}`, {
         withCredentials: true,
       });
-      // Remove the deleted place from the state
-      setPlaces(places.filter((place) => place._id !== placeId));
+      setPlaces((prevPlaces) =>
+        prevPlaces.filter((place) => place._id !== placeId)
+      );
     } catch (err) {
       console.error("Error deleting place:", err);
-      setError("Failed to delete place.");
+      setError(err.response?.data?.message || "Failed to delete place.");
     }
   };
 
@@ -75,46 +76,46 @@ export default function PlacesPage() {
                 key={index}
                 className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl mb-4"
               >
-                <Skeleton.Image className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48" />
+                <Skeleton.Image style={{ width: "128px", height: "128px" }} />
                 <div className="flex-1">
                   <Skeleton.Input
                     active
                     style={{ width: "80%" }}
-                    className="sm:w-3/4 md:w-2/3 lg:w-1/2"
+                    className="mt-2"
                   />
                   <Skeleton.Input
                     active
                     style={{ width: "60%" }}
-                    className="sm:w-2/3 md:w-1/2 lg:w-1/3 mt-2"
+                    className="mt-2"
                   />
                   <Skeleton.Input
                     active
                     style={{ width: "40%" }}
-                    className="sm:w-1/2 md:w-1/3 lg:w-1/4 mt-2"
+                    className="mt-2"
                   />
                 </div>
               </div>
             ))
         ) : error ? (
-          <p>{error}</p>
+          <p className="text-red-500 text-center">{error}</p>
         ) : (
           places.map((place) => (
             <div
               key={place._id}
               className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl mb-4 hover:bg-gray-200"
             >
-              <div className="flex w-32 h-32 bg-gray-300 grow shrink-0">
+              <div className="flex-shrink-0 flex-grow-0 w-32 h-32 bg-gray-300">
                 <PlaceImg place={place} />
               </div>
-              <div className="grow-0 shrink">
+              <div className="flex-1">
                 <h2 className="text-lg font-medium">
                   {place.title}, {place.address}
                 </h2>
                 <p className="text-sm font-light mt-2">{place.description}</p>
                 <div className="flex justify-end mt-3 mr-4 p-2">
                   <Link
-                    to={"/account/places/" + place._id}
-                    className=" text-black pr-2"
+                    to={`/account/places/${place._id}`}
+                    className="text-black pr-2"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

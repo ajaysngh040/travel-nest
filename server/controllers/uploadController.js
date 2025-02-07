@@ -1,43 +1,46 @@
-// Route for uploading an Imag
+const fs = require("fs");
+const { cloudinary } = require("../config/cloudinary");
 
-exports.uploadImage = (req, res) => {
+// Upload Image to Cloudinary (File Upload)
+exports.uploadImage = async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded." });
-  }
-
-  res.status(200).json({
-    message: "File uploaded successfully.",
-    filePath: `/uploads/${req.file.filename}`,
-  });
-};
-
-// Route for uploading an Image By Link
-
-exports.uploadByLink = async (req, res) => {
-  const { imageUrl } = req.body;
-  if (!imageUrl) {
-    return res.status(400).json({ message: "Image URL is required." });
+    return res.status(400).json({ error: "No file uploaded." });
   }
 
   try {
-    const response = await axios.get(imageUrl, { responseType: "stream" });
-    const filename = Date.now() + "-" + path.basename(imageUrl);
-    const filepath = path.join(__dirname, "../uploads", filename);
-
-    const writer = fs.createWriteStream(filepath);
-    response.data.pipe(writer);
-
-    writer.on("finish", () => {
-      res.status(200).json({
-        message: "File uploaded successfully.",
-        filePath: `/uploads/${filename}`,
-      });
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "uploads",
     });
 
-    writer.on("error", () => {
-      res.status(500).json({ message: "Error saving the file." });
+    fs.unlinkSync(req.file.path); // Delete local file after upload
+    res.json({
+      message: "File uploaded successfully.",
+      imageUrl: result.secure_url,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching the image." });
+    console.error("Cloudinary Upload Error:", error);
+    res.status(500).json({ error: "Failed to upload image." });
+  }
+};
+
+// Upload Image by URL to Cloudinary
+exports.uploadByLink = async (req, res) => {
+  const { link } = req.body;
+  if (!link) {
+    return res.status(400).json({ error: "Image URL is required." });
+  }
+
+  try {
+    const result = await cloudinary.uploader.upload(link, {
+      folder: "uploads",
+    });
+
+    res.json({
+      message: "File uploaded successfully.",
+      imageUrl: result.secure_url,
+    });
+  } catch (error) {
+    console.error("Cloudinary Upload Error:", error);
+    res.status(500).json({ error: "Failed to upload image from URL." });
   }
 };

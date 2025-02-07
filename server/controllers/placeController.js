@@ -21,24 +21,52 @@ exports.getPlaces = async (req, res) => {
   }
 };
 
-// Update a Place
+// Get a single Place by ID
+exports.getPlace = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const place = await Place.findById(id);
+    if (!place) return res.status(404).json({ error: "Place not found" });
+
+    res.json(place);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch place" });
+  }
+};
+
 exports.updatePlace = async (req, res) => {
   try {
-    const place = await Place.findById(req.body.id);
-    if (place.owner.toString() !== req.user.id) {
+    const place = await Place.findById(req.params.id);
+    if (!place) return res.status(404).json({ error: "Place not found" });
+
+    if (!place.owner.equals(req.user.id)) {
+      // Use .equals()
       return res.status(403).json({ error: "Unauthorized" });
     }
+
     Object.assign(place, req.body);
     await place.save();
-    res.json({ message: "Place updated successfully" });
+    res.json({ message: "Place updated successfully", place });
   } catch (error) {
+    console.error("Update error:", error);
     res.status(500).json({ error: "Failed to update place" });
   }
 };
 
-// Combined route for fetching all places or a single place by ID
+exports.deletePlace = async (req, res) => {
+  try {
+    const place = await Place.findById(req.params.id);
+    if (!place) return res.status(404).json({ error: "Place not found" });
 
-exports.getPlace = async (req, res) => {
-  const { id } = req.params;
-  res.json(await Place.findById(id));
+    if (!place.owner.equals(req.user.id)) {
+      // Use .equals()
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    await place.deleteOne();
+    res.json({ message: "Place deleted successfully" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({ error: "Failed to delete place" });
+  }
 };
