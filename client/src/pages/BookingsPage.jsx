@@ -23,7 +23,7 @@ export default function BookingsPage() {
       .catch((error) => {
         console.error("Error fetching bookings:", error.response);
       });
-  }, []);
+  }, [user]);
 
   return (
     <div>
