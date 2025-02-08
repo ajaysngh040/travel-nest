@@ -14,11 +14,16 @@ exports.createBooking = async (req, res) => {
 // Get Bookings
 exports.getBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user.id }).populate(
-      "place"
-    );
+    const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const bookings = await Booking.find({ user: userId }).populate("place");
     res.status(200).json(bookings);
   } catch (error) {
+    console.error("Error fetching bookings:", error);
     res.status(500).json({ error: "Failed to fetch bookings" });
   }
 };

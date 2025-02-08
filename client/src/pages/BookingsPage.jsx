@@ -1,18 +1,21 @@
 import AccountNav from "../components/AccountNav";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import PlaceImg from "../components/PlaceImg";
 import { Link } from "react-router-dom";
 import BookingDates from "../components/BookingDates";
 import { Skeleton } from "antd"; // Import Skeleton from Ant Design
+import { UserContext } from "../context/UserContext";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     axios
-      .get("/bookings", { withCredentials: true })
+      .get(`/bookings?userId=${user?.id}`, { withCredentials: true })
+
       .then((response) => {
         setBookings(response.data);
         setLoading(false);
