@@ -28,7 +28,7 @@ const app = express();
 const allowedOrigins =
   process.env.NODE_ENV === "production"
     ? [process.env.CLIENT_URL]
-    : ["http://localhost:5173", process.env.CLIENT_URL];
+    : ["http://localhost:5173", process.env.CLIENT_URL].filter(Boolean); // Remove undefined values
 
 app.use(
   cors({
