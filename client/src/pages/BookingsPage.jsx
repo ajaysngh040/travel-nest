@@ -11,10 +11,15 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/bookings").then((response) => {
-      setBookings(response.data);
-      setLoading(false); // Set loading to false after data is fetched
-    });
+    axios
+      .get("/bookings", { withCredentials: true })
+      .then((response) => {
+        setBookings(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching bookings:", error.response);
+      });
   }, []);
 
   return (
